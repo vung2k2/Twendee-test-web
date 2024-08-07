@@ -35,26 +35,23 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const totalPages = 10;
   const totalResults = 10;
   const fetchUsers = async (page: number) => {
-    // Lấy các tiêu chí sắp xếp từ localStorage
     const storedSortField =
       (localStorage.getItem("sortField") as "name" | "username") || "name";
     const storedSortOrder =
       (localStorage.getItem("sortOrder") as "asc" | "desc") || "asc";
 
-    // Gửi yêu cầu đến API để lấy dữ liệu người dùng
     const response = await fetch(
-      `https://randomuser.me/api/?page=${page}&results=${totalResults}`,
+      `${import.meta.env.VITE_API_URL}/?page=${page}&results=${totalResults}`,
     );
     const data = await response.json();
 
-    // Sắp xếp dữ liệu dựa trên các tiêu chí
     const sortedUsers = [...data.results].sort((a, b) => {
       let aValue: string;
       let bValue: string;
 
       if (storedSortField === "name") {
-        aValue = a.name.last.toLowerCase(); // Sắp xếp theo họ
-        bValue = b.name.last.toLowerCase(); // Sắp xếp theo họ
+        aValue = a.name.last.toLowerCase();
+        bValue = b.name.last.toLowerCase();
       } else {
         aValue = a.login.username.toLowerCase();
         bValue = b.login.username.toLowerCase();
@@ -65,7 +62,6 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       return 0;
     });
 
-    // Lưu dữ liệu đã sắp xếp vào state
     setUsers(sortedUsers);
   };
 
