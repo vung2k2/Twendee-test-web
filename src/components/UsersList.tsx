@@ -4,8 +4,12 @@ import { UserContext } from "../context/UserContext";
 
 const UsersList: React.FC = () => {
   const userContext = useContext(UserContext);
-  const [sortField, setSortField] = useState<"name" | "username">("name");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortField, setSortField] = useState<"name" | "username">(
+    (localStorage.getItem("sortField") as "name" | "username") || "name",
+  );
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">(
+    (localStorage.getItem("sortOrder") as "asc" | "desc") || "asc",
+  );
 
   if (!userContext) {
     return <div>Loading...</div>;
@@ -19,9 +23,11 @@ const UsersList: React.FC = () => {
     setCurrentPage(newPage);
   };
 
-  const handleSort = (field: "name" | "username") => {
+  function handleSort(field: "name" | "username") {
     const newSortOrder =
       sortField === field ? (sortOrder === "asc" ? "desc" : "asc") : "asc";
+    localStorage.setItem("sortField", field);
+    localStorage.setItem("sortOrder", newSortOrder);
     setSortField(field);
     setSortOrder(newSortOrder);
 
@@ -43,7 +49,7 @@ const UsersList: React.FC = () => {
     });
 
     setUsers(sortedUsers);
-  };
+  }
 
   return (
     <div>
