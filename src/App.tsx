@@ -1,12 +1,20 @@
 import UsersList from "./components/UsersList";
 import { UserProvider } from "./context/UserContext";
+import { Routes, Route } from "react-router-dom";
 
 const App: React.FC = () => {
   return (
     <UserProvider>
-      <div className="container mx-auto p-8">
-        <UsersList />
-      </div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="container mx-auto p-8">
+              <UsersList />
+            </div>
+          }
+        />
+      </Routes>
     </UserProvider>
   );
 };

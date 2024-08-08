@@ -1,5 +1,6 @@
 // src/context/UserContext.tsx
 import React, { createContext, useState, useEffect, ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 
 interface User {
   name: {
@@ -30,11 +31,22 @@ interface UserContextProps {
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const pageParam = queryParams.get("page");
+  const [currentPage, setCurrentPage] = useState<number>(
+    pageParam ? parseInt(pageParam) : 1,
+  );
+
   const [users, setUsers] = useState<User[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const totalPages = 10;
   const totalResults = 10;
-  const fetchUsers = async (page: number) => {
+
+  useEffect(() => {
+    fetchUsers(currentPage);
+  }, [currentPage]);
+
+  async function fetchUsers(page: number) {
     const storedSortField =
       (localStorage.getItem("sortField") as "name" | "username") || "name";
     const storedSortOrder =
@@ -63,11 +75,7 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     });
 
     setUsers(sortedUsers);
-  };
-
-  useEffect(() => {
-    fetchUsers(currentPage);
-  }, [currentPage]);
+  }
 
   return (
     <UserContext.Provider

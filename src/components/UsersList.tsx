@@ -1,9 +1,13 @@
 // src/features/users/UsersList.tsx
 import React, { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const UsersList: React.FC = () => {
   const userContext = useContext(UserContext);
+
+  const navigate = useNavigate();
+
   const [sortField, setSortField] = useState<"name" | "username">(
     (localStorage.getItem("sortField") as "name" | "username") || "name",
   );
@@ -21,6 +25,7 @@ const UsersList: React.FC = () => {
   const handlePageChange = (newPage: number) => {
     setUsers([]);
     setCurrentPage(newPage);
+    navigate(`?page=${newPage}`);
   };
 
   function handleSort(field: "name" | "username") {
@@ -100,7 +105,7 @@ const UsersList: React.FC = () => {
                   </td>
                 </tr>
               ))
-            : Array.from({ length: 10 }).map((_, index) => (
+            : Array.from({ length: totalPages }).map((_, index) => (
                 <tr
                   key={index}
                   className="animate-pulse border border-gray-200"
@@ -120,16 +125,35 @@ const UsersList: React.FC = () => {
         </tbody>
       </table>
 
-      <div className="mt-4 flex justify-between">
+      <div className="mt-4 flex items-center justify-between">
         <button
-          className="rounded bg-gray-300 px-4 py-2"
+          className={`rounded bg-gray-300 px-4 py-2 ${
+            currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
+          }`}
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
           Previous
         </button>
+        <div className="hidden space-x-2 md:flex">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <button
+              key={index}
+              className={`rounded px-3 py-1 ${
+                currentPage === index + 1
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-300"
+              }`}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
         <button
-          className="rounded bg-gray-300 px-4 py-2"
+          className={`rounded bg-gray-300 px-4 py-2 ${
+            currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""
+          }`}
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
         >
