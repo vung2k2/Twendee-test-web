@@ -4,7 +4,7 @@ This is the Twendee test web application built with ReactJS using Vite.
 
 ## Links
 
-- **Website(using api https://randomuser.me/api):** [Twendee-test-web](https://twendee-test-web.vercel.app/)
+- **Website(using api randomuser.me):** [Twendee-test-web](https://twendee-test-web.vercel.app/)
 - **API:** https://github.com/vung2k2/Twendee-test-api
 - **Demo Video:** [YouTube](https://youtu.be/ayBZsHjYps0)
 
